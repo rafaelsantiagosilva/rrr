@@ -1,0 +1,89 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum UserType {
+  PF
+  PJ
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String
+  username       String   @unique
+  email          String   @unique
+  whatsappNumber String?  @map("whatsapp_number")
+  cnpj           String?  @unique
+  password       String
+  type           UserType @default(PF)
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  products       Product[]
+  interested     UserInterestedProduct[]
+  messages       Message[]
+  conversations1 Conversation[]          @relation("ConversationUser1")
+  conversations2 Conversation[]          @relation("ConversationUser2")
+
+  @@map("users")
+}
+
+model Product {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  category    String
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user       User                    @relation(fields: [userId], references: [id])
+  userId     String                  @map("user_id")
+  interested UserInterestedProduct[]
+
+  @@map("products")
+}
+
+model UserInterestedProduct {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @map("user_id")
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @map("product_id")
+
+  @@map("user_interested_products")
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user1   User   @relation("ConversationUser1", fields: [user1Id], references: [id])
+  user1Id String @map("user1_id")
+
+  user2   User   @relation("ConversationUser2", fields: [user2Id], references: [id])
+  user2Id String @map("user2_id")
+
+  messages Message[]
+
+  @@map("conversations")
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  sender       User   @relation(fields: [userSenderId], references: [id])
+  userSenderId String @map("user_sender_id")
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  conversationId String       @map("conversation_id")
+
+  @@map("messages")
+}
