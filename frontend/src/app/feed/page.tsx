@@ -1,7 +1,7 @@
 'use client';
 
 import { Category } from '@/components/category';
-import { Header } from '@/components/header';
+import { HeaderLogged } from '@/components/header/header-logged';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { BiLike } from 'react-icons/bi';
@@ -33,7 +33,7 @@ export default function Feed() {
 	const router = useRouter();
 
 	if (!localStorage.getItem('user')) {
-		router.push('/login');
+		router.push('/welcome');
 	}
 
 	const user: User = JSON.parse(localStorage.getItem('user')!);
@@ -107,7 +107,7 @@ export default function Feed() {
 
 	return (
 		<>
-			<Header />
+			<HeaderLogged />
 
 			<main className="p-6 flex flex-col justify-between gap-4 items-center">
 				<h1>Olá {user.name}!</h1>

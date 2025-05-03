@@ -1,14 +1,14 @@
 'use client';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Header } from '@/components/header';
+import { Header } from '@/components/header/header';
 
 export default function CreatePostPage() {
 	const user = localStorage.getItem('user');
 	const router = useRouter();
 
 	if (!user) {
-		router.push('/login');
+		router.push('/welcome');
 	}
 
 	const userData = JSON.parse(user ?? '');

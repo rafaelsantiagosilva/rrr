@@ -1,6 +1,6 @@
 'use client';
 
-import { Header } from '@/components/header';
+import { Header } from '@/components/header/header';
 import { useParams, useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { IoIosSend } from 'react-icons/io';
@@ -21,7 +21,7 @@ export default function MessagePage() {
 	const router = useRouter();
 
 	if (!localStorage.getItem('user')) {
-		router.push('/login');
+		router.push('/welcome');
 	}
 
 	const user = JSON.parse(localStorage.getItem('user')!);
