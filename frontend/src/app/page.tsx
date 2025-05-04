@@ -7,7 +7,7 @@ export default function Home() {
 	const user = localStorage.getItem('user');
 	const router = useRouter();
 
-	if (!user) router.push('/login');
+	if (!user) router.push('/welcome');
 
 	router.push('/feed');
 
