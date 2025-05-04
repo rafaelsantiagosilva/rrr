@@ -2,6 +2,7 @@ import { fastifyCors } from '@fastify/cors'
 import fastifySwagger from '@fastify/swagger'
 import fastifySwaggerUi from '@fastify/swagger-ui'
 import fastify, { FastifyInstance } from 'fastify'
+import fastifyMultipart from '@fastify/multipart'
 
 import type { ZodTypeProvider } from 'fastify-type-provider-zod'
 import {
@@ -30,6 +31,8 @@ app.register(fastifyCors, {
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
 })
+
+app.register(fastifyMultipart)
 
 app.register(fastifySwagger, {
   openapi: {

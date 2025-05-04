@@ -1,7 +1,18 @@
+import { MultipartFile } from '@fastify/multipart'
+import { createWriteStream, mkdirSync } from 'fs'
+import { extname, join, resolve } from 'path'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
 import { crypt } from '../libs/bcrypt'
 import { prisma } from '../libs/prisma'
 
 export default class UserServices {
+  private pump
+
+  constructor() {
+    this.pump = promisify(pipeline)
+  }
+
   async create(
     name: string,
     username: string,
@@ -65,5 +76,15 @@ export default class UserServices {
       where: { id },
       data,
     })
+  }
+
+  async saveProfileImage(data: MultipartFile, userId: string) {
+    const uploadDir = resolve(__dirname, '..', '..', 'uploads', 'users', userId)
+    mkdirSync(uploadDir, { recursive: true })
+
+    const fileExtension = extname(data.filename)
+    const filePath = join(uploadDir, `profile${fileExtension}`)
+
+    await this.pump(data.file, createWriteStream(filePath))
   }
 }

@@ -118,6 +118,19 @@ export async function userRoutes(app: FastifyInstance) {
     }
   })
 
+  app.post('/upload/profile/:id', {}, async (request, reply) => {
+    const paramsSchema = z.object({
+      id: z.string().uuid()
+    })
+
+    const image = await request.file()
+
+    if (!image) return reply.code(400).send({ error: "Arquivo não encontrado" })
+
+    const { id } = paramsSchema.parse(request.params)
+    await userUseCases.saveProfileImage(image, id)
+  })
+
   app.put('/:id', {
     schema: {
       tags: ['users'],
