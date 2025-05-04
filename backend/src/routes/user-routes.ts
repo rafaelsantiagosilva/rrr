@@ -2,7 +2,6 @@ import { FastifyInstance } from 'fastify'
 import UserUseCases from '../services/UserServices'
 import { compare } from 'bcrypt'
 import { z } from 'zod'
-import { User } from '@prisma/client'
 
 const userUseCases = new UserUseCases()
 
