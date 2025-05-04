@@ -1,5 +1,5 @@
 import { MultipartFile } from '@fastify/multipart'
-import { createWriteStream, mkdirSync } from 'fs'
+import { createReadStream, createWriteStream, existsSync, mkdirSync } from 'fs'
 import { extname, join, resolve } from 'path'
 import { pipeline } from 'stream'
 import { promisify } from 'util'
@@ -86,5 +86,19 @@ export default class UserServices {
     const filePath = join(uploadDir, `profile${fileExtension}`)
 
     await this.pump(data.file, createWriteStream(filePath))
+  }
+
+  async getProfileImage(userId: string) {
+    const imageDir = join(__dirname, '..', '..', 'uploads', 'users', userId)
+    const extensions = ['.png', '.jpg', '.jpeg', '.webp']
+
+    for (const extension of extensions) {
+      const filePath = join(imageDir, `profile${extension}`)
+
+      if (existsSync(filePath))
+        return { file: createReadStream(filePath), extension }
+    }
+
+    return null
   }
 }

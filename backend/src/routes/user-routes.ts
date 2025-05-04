@@ -35,6 +35,18 @@ export async function userRoutes(app: FastifyInstance) {
     return user;
   })
 
+  app.get('/profile/:id', {}, async (request, reply) => {
+    const paramsSchema = z.object({ id: z.string().uuid() })
+    const { id } = paramsSchema.parse(request.params)
+
+    const profileImage = await userUseCases.getProfileImage(id)
+
+    if (!profileImage)
+      reply.code(404).send({ error: "Nenhuma imagem encontrada" })
+
+    return reply.type(`image/${profileImage?.extension.replace('.', '')}`).send(profileImage?.file)
+  })
+
   app.post('/register', {
     schema: {
       tags: ['users'],
