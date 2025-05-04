@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify'
 import UserUseCases from '../services/UserServices'
 import { compare } from 'bcrypt'
 import { z } from 'zod'
+import { User } from '@prisma/client'
 
 const userUseCases = new UserUseCases()
 
@@ -21,9 +22,7 @@ export async function userRoutes(app: FastifyInstance) {
           name: z.string(),
           username: z.string(),
           email: z.string().email(),
-          whatsappNumber: z.string().nullable(),
-          cnpj: z.string().nullable(),
-          type: z.union([z.literal('PF'), z.literal('PJ')]).nullable(),
+          createdAt: z.date()
         }),
         404: z.object({
           error: z.string()
@@ -33,7 +32,8 @@ export async function userRoutes(app: FastifyInstance) {
   }, async (request) => {
     const paramsSchema = z.object({ id: z.string().uuid() })
     const { id } = paramsSchema.parse(request.params)
-    return await userUseCases.findById(id)
+    const user = await userUseCases.findById(id);
+    return user;
   })
 
   app.post('/register', {
@@ -46,10 +46,7 @@ export async function userRoutes(app: FastifyInstance) {
         name: z.string(),
         username: z.string(),
         email: z.string().email(),
-        whatsappNumber: z.string().nullable(),
-        cnpj: z.string().nullable(),
         password: z.string().min(6),
-        type: z.union([z.literal('PF'), z.literal('PJ')]).nullable()
       }),
       response: {
         201: z.void(),
@@ -63,18 +60,13 @@ export async function userRoutes(app: FastifyInstance) {
       name: z.string(),
       username: z.string(),
       email: z.string().email(),
-      whatsappNumber: z.string().nullable(),
-      cnpj: z.string().nullable(),
       password: z.string().min(6),
-      type: z.literal("PF").or(
-        z.literal("PJ")
-      ).nullable()
     })
 
-    const { name, username, email, whatsappNumber, cnpj, password, type } = bodySchema.parse(request.body)
+    const { name, username, email, password } = bodySchema.parse(request.body)
 
     try {
-      await userUseCases.create(name, username, email, whatsappNumber, cnpj, password, type)
+      await userUseCases.create(name, username, email, password)
       return reply.status(201).send()
     } catch (err) {
       return reply.status(400).send({ error: 'User already exists or invalid data.' })
@@ -97,9 +89,7 @@ export async function userRoutes(app: FastifyInstance) {
           name: z.string(),
           username: z.string(),
           email: z.string().email(),
-          whatsappNumber: z.string().nullable(),
-          cnpj: z.string().nullable(),
-          type: z.union([z.literal('PF'), z.literal('PJ')]).nullable(),
+          createdAt: z.date()
         }),
         404: z.object({
           error: z.string()
@@ -142,10 +132,7 @@ export async function userRoutes(app: FastifyInstance) {
         name: z.string(),
         username: z.string(),
         email: z.string().email(),
-        whatsappNumber: z.string().nullable(),
-        cnpj: z.string().nullable(),
         password: z.string().min(6),
-        type: z.union([z.literal("PF"), z.literal("PJ")]).nullable()
       }),
       response: {
         204: z.void(),
@@ -162,18 +149,13 @@ export async function userRoutes(app: FastifyInstance) {
       name: z.string(),
       username: z.string(),
       email: z.string().email(),
-      whatsappNumber: z.string().nullable(),
-      cnpj: z.string().nullable(),
       password: z.string().min(6),
-      type: z.literal("PF").or(
-        z.literal("PJ")
-      ).nullable()
     })
 
-    const { name, username, email, whatsappNumber, cnpj, password, type } = bodySchema.parse(request.body)
+    const { name, username, email, password } = bodySchema.parse(request.body)
 
     try {
-      await userUseCases.update(id, name, username, email, whatsappNumber, cnpj, password, type)
+      await userUseCases.update(id, name, username, email, password)
       return reply.status(204).send()
     } catch (err) {
       return reply.status(400).send({ error: 'User already exists or invalid data.' })
