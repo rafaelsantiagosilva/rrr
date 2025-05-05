@@ -1,16 +1,23 @@
-import { UserType } from '@prisma/client'
+import { MultipartFile } from '@fastify/multipart'
+import { createReadStream, createWriteStream, existsSync, mkdirSync } from 'fs'
+import { extname, join, resolve } from 'path'
+import { pipeline } from 'stream'
+import { promisify } from 'util'
 import { crypt } from '../libs/bcrypt'
 import { prisma } from '../libs/prisma'
 
 export default class UserServices {
+  private pump
+
+  constructor() {
+    this.pump = promisify(pipeline)
+  }
+
   async create(
     name: string,
     username: string,
     email: string,
-    whatsappNumber: string | null,
-    cnpj: string | null,
     password: string,
-    type: "PJ" | "PF" | null
   ) {
     const hashedPassword = await crypt.hashPassword(password)
 
@@ -18,20 +25,11 @@ export default class UserServices {
       name,
       username,
       email,
-      whatsappNumber,
-      cnpj,
       password: hashedPassword,
     }
 
-    let insertData;
-
-    if (type)
-      insertData = { ...data, type }
-    else
-      insertData = data
-
     await prisma.user.create({
-      data: insertData
+      data
     })
   }
 
@@ -61,10 +59,7 @@ export default class UserServices {
     name: string,
     username: string,
     email: string,
-    whatsappNumber: string | null,
-    cnpj: string | null,
     password: string,
-    type: "PJ" | "PF" | null
   ) {
     if (password) {
       password = await crypt.hashPassword(password)
@@ -74,21 +69,36 @@ export default class UserServices {
       name,
       username,
       email,
-      whatsappNumber,
-      cnpj,
       password
     }
 
-    let insertData;
-
-    if (type)
-      insertData = { ...data, type }
-    else
-      insertData = data
-
     return await prisma.user.update({
       where: { id },
-      data: insertData,
+      data,
     })
+  }
+
+  async saveProfileImage(data: MultipartFile, userId: string) {
+    const uploadDir = resolve(__dirname, '..', '..', 'uploads', 'users', userId)
+    mkdirSync(uploadDir, { recursive: true })
+
+    const fileExtension = extname(data.filename)
+    const filePath = join(uploadDir, `profile${fileExtension}`)
+
+    await this.pump(data.file, createWriteStream(filePath))
+  }
+
+  async getProfileImage(userId: string) {
+    const imageDir = join(__dirname, '..', '..', 'uploads', 'users', userId)
+    const extensions = ['.png', '.jpg', '.jpeg', '.webp']
+
+    for (const extension of extensions) {
+      const filePath = join(imageDir, `profile${extension}`)
+
+      if (existsSync(filePath))
+        return { file: createReadStream(filePath), extension }
+    }
+
+    return null
   }
 }
