@@ -1,17 +1,10 @@
 'use client';
 
 import { Header } from '@/components/header/header';
+import { Message } from '@/interfaces/message';
 import { useParams, useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
 import { IoIosSend } from 'react-icons/io';
-
-interface Message {
-	id: string;
-	content: string;
-	userSenderId: string;
-	conversationId: string;
-	createdAt?: string;
-}
 
 export default function MessagePage() {
 	const { conversationId } = useParams();

@@ -17,8 +17,6 @@ export function RegisterForm() {
 			name,
 			username,
 			email,
-			whatsappNumber: null,
-			cnpj: null,
 			password,
 		};
 

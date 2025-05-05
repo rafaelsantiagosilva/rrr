@@ -2,33 +2,14 @@
 
 import { Category } from '@/components/category';
 import { HeaderLogged } from '@/components/header/header-logged';
+import { Product } from '@/interfaces/product';
+import { User } from '@/interfaces/user';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { BiLike } from 'react-icons/bi';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
 export default function Feed() {
-	interface Product {
-		id: string;
-		name: string;
-		description: string;
-		category: string;
-		userId: string;
-		createdAt: string;
-	}
-
-	interface User {
-		id: string;
-		name: string;
-		username: string;
-		email: string;
-		whatsappNumber: string | null;
-		cnpj: string | null;
-		password: string;
-		type: string;
-		createdAt: string;
-	}
-
 	const [products, setProducts] = useState<Product[]>([]);
 	const router = useRouter();
 
