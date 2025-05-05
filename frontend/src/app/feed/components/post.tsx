@@ -18,6 +18,7 @@ interface PostProps {
 export function Post({ product, userId, formattedDate }: PostProps) {
 	async function goToConversation(user1Id: string, user2Id: string) {
 		const data = await getConversationBetweenTwoUsers(user1Id, user2Id);
+		const baseUrlToConversation = '/chat/';
 
 		if (!data) {
 			const newConversationId = await createConversationBetweenTwoUsers(
@@ -27,11 +28,11 @@ export function Post({ product, userId, formattedDate }: PostProps) {
 
 			if (!newConversationId) return;
 
-			router.push(`/messages/${newConversationId.id}`);
+			router.push(`${baseUrlToConversation}${newConversationId.id}`);
 			return;
 		}
 
-		router.push(`/messages/${data.id}`);
+		router.push(`${baseUrlToConversation}${data.id}`);
 	}
 
 	return (
