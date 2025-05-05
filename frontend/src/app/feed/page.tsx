@@ -36,15 +36,10 @@ export default function Feed() {
 
 			<main className="mx-0 p-6 pt-[65px] flex flex-col justify-between gap-4 items-center">
 				{products.map((product) => {
-					const formattedDate = new Intl.DateTimeFormat('pt-BR').format(
-						new Date(product.createdAt)
-					);
-
 					return (
 						<Post
 							key={product.id}
 							product={product}
-							formattedDate={formattedDate}
 							userId={user.id}
 							router={router}
 						/>

@@ -4,22 +4,21 @@ import {
 	getConversationBetweenTwoUsers,
 } from '@/http/conversations';
 import { deleteProduct } from '@/http/products';
+import { getUser } from '@/http/user';
 import { Product } from '@/interfaces/product';
+import { User } from '@/interfaces/user';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
+import { useState } from 'react';
 import { BiLike } from 'react-icons/bi';
 import { FaRegTrashAlt } from 'react-icons/fa';
-import { useState } from 'react';
-import { User } from '@/interfaces/user';
-import { getUser } from '@/http/user';
 
 interface PostProps {
-	product: Omit<Product, 'createdAt'>;
+	product: Product;
 	userId: string;
-	formattedDate: string;
 	router: AppRouterInstance;
 }
 
-export function Post({ product, userId, formattedDate, router }: PostProps) {
+export function Post({ product, userId, router }: PostProps) {
 	const [owner, setOwner] = useState<User | null>(null);
 
 	async function goToConversation(user1Id: string, user2Id: string) {
@@ -47,6 +46,10 @@ export function Post({ product, userId, formattedDate, router }: PostProps) {
 	}
 
 	loadOwner(product.userId);
+
+	const formattedDate = new Intl.DateTimeFormat('pt-BR').format(
+		new Date(product.createdAt)
+	);
 
 	return (
 		<section className="w-96 mt-4 shadow-lg border p-2 rounded bg-slate-100">
