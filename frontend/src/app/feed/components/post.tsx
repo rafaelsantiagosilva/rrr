@@ -5,17 +5,23 @@ import {
 } from '@/http/conversations';
 import { deleteProduct } from '@/http/products';
 import { Product } from '@/interfaces/product';
-import router from 'next/router';
+import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { BiLike } from 'react-icons/bi';
 import { FaRegTrashAlt } from 'react-icons/fa';
+import { useState } from 'react';
+import { User } from '@/interfaces/user';
+import { getUser } from '@/http/user';
 
 interface PostProps {
 	product: Omit<Product, 'createdAt'>;
 	userId: string;
 	formattedDate: string;
+	router: AppRouterInstance;
 }
 
-export function Post({ product, userId, formattedDate }: PostProps) {
+export function Post({ product, userId, formattedDate, router }: PostProps) {
+	const [owner, setOwner] = useState<User | null>(null);
+
 	async function goToConversation(user1Id: string, user2Id: string) {
 		const data = await getConversationBetweenTwoUsers(user1Id, user2Id);
 		const baseUrlToConversation = '/chat/';
@@ -35,11 +41,33 @@ export function Post({ product, userId, formattedDate }: PostProps) {
 		router.push(`${baseUrlToConversation}${data.id}`);
 	}
 
+	async function loadOwner(userId: string) {
+		const user = await getUser(userId);
+		setOwner(user);
+	}
+
+	loadOwner(product.userId);
+
 	return (
-		<section className="w-full md:w-[70%] shadow-lg border p-2 rounded bg-slate-100">
+		<section className="w-96 mt-4 shadow-lg border p-2 rounded bg-slate-100">
 			<header className="w-full border-b flex items-center justify-between">
-				<h2 className="text-lg font-bold">{product.name}</h2>
-				<small>{formattedDate}</small>
+				<div className="flex items-center">
+					{/* eslint-disable-next-line @next/next/no-img-element */}
+					<img
+						src={`http://localhost:3333/users/profile/${product.userId}`}
+						alt="Foto de perfil"
+						onError={(e) => {
+							e.currentTarget.src = '/default-avatar.png'; // caminho da imagem padrão
+						}}
+						className="size-8 m-1 rounded-full object-cover"
+					/>
+
+					<div className="flex gap-1 items-center">
+						<p className="text-lg font-semibold">{owner?.name}</p>
+						<p className="text-sm text-slate-600">@{owner?.username}</p>
+					</div>
+				</div>
+				<div>{formattedDate}</div>
 			</header>
 			<nav className="flex gap-1 my-2">
 				<Category categoryName={product.category} />

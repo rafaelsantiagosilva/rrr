@@ -6,8 +6,10 @@ import { User } from '@/interfaces/user';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Post } from './components/post';
+import { FaPlus } from 'react-icons/fa';
 
 import { getProducts } from '@/http/products';
+import Link from 'next/link';
 
 export default function Feed() {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -32,8 +34,7 @@ export default function Feed() {
 		<>
 			<HeaderLogged />
 
-			<main className="p-6 flex flex-col justify-between gap-4 items-center">
-				<h1>Olá {user.name}!</h1>
+			<main className="mx-0 p-6 pt-[65px] flex flex-col justify-between gap-4 items-center">
 				{products.map((product) => {
 					const formattedDate = new Intl.DateTimeFormat('pt-BR').format(
 						new Date(product.createdAt)
@@ -45,18 +46,25 @@ export default function Feed() {
 							product={product}
 							formattedDate={formattedDate}
 							userId={user.id}
+							router={router}
 						/>
 					);
 				})}
 			</main>
-			<button
-				onClick={() => {
-					router.push('/create-post');
-				}}
-				className="fixed bottom-0 right-0 mb-12 mr-12 w-16 h-16 p-2 font-bold text-slate-50 text-4xl cursor-pointer rounded-full shadow bg-blue-700 hover:bg-blue-600"
-			>
-				+
-			</button>
+
+			<div className="group">
+				<Link
+					href="/create-post"
+					className="fixed bottom-[120px] right-5 flex items-center gap-2 border border-r-4 border-b-4 border-sky-800 px-4 py-3 font-bold text-slate-50 text-xl cursor-pointer rounded-full shadow bg-sky-700 hover:bg-sky-600 transition-all duration-300 w-16 hover:w-60 overflow-hidden"
+				>
+					<span>
+						<FaPlus className="text-2xl text-center" />
+					</span>
+					<span className="whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+						Adicionar um Post
+					</span>
+				</Link>
+			</div>
 		</>
 	);
 }
