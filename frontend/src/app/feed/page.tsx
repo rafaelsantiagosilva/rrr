@@ -1,13 +1,13 @@
 'use client';
 
-import { Category } from '@/components/category';
 import { HeaderLogged } from '@/components/header/header-logged';
 import { Product } from '@/interfaces/product';
 import { User } from '@/interfaces/user';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
-import { BiLike } from 'react-icons/bi';
-import { FaRegTrashAlt } from 'react-icons/fa';
+import { useEffect, useState } from 'react';
+import { Post } from './components/post';
+
+import { getProducts } from '@/http/products';
 
 export default function Feed() {
 	const [products, setProducts] = useState<Product[]>([]);
@@ -19,71 +19,13 @@ export default function Feed() {
 
 	const user: User = JSON.parse(localStorage.getItem('user')!);
 
-	async function getProducts() {
-		const response = await fetch('http://localhost:3333/products');
-		const data = await response.json();
+	async function loadProducts() {
+		const data = await getProducts();
 		setProducts(data);
 	}
 
-	async function deleteProduct(id: string) {
-		console.log(`> id: ${id}`);
-		const response = await fetch(`http://localhost:3333/products/${id}`, {
-			method: 'DELETE',
-		});
-
-		if (!response.ok) {
-			alert('Erro ao excluir produto');
-			console.table(await response.json());
-			return;
-		}
-
-		await getProducts();
-	}
-
-	async function createConversationBetweenTwoUsers(
-		user1Id: string,
-		user2Id: string
-	) {
-		const response = await fetch('http://localhost:3333/conversations', {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ user1Id, user2Id }),
-		});
-
-		if (!response.ok) {
-			alert('Erro ao iniciar conversa');
-			console.table(await response.json());
-			return;
-		}
-
-		const data = await response.json();
-		return data.id;
-	}
-
-	async function goToConversation(user1Id: string, user2Id: string) {
-		const response = await fetch(
-			`http://localhost:3333/conversations/by-users/${user1Id}/${user2Id}`
-		);
-
-		const data = await response.json();
-
-		if (!data) {
-			const newConversationId = await createConversationBetweenTwoUsers(
-				user1Id,
-				user2Id
-			);
-
-			if (!newConversationId) return;
-
-			router.push(`/messages/${newConversationId.id}`);
-			return;
-		}
-
-		router.push(`/messages/${data.id}`);
-	}
-
 	useEffect(() => {
-		getProducts();
+		loadProducts();
 	}, []);
 
 	return (
@@ -98,40 +40,12 @@ export default function Feed() {
 					);
 
 					return (
-						<section
+						<Post
 							key={product.id}
-							className="w-full md:w-[70%] shadow-lg border p-2 rounded bg-slate-100"
-						>
-							<header className="w-full border-b flex items-center justify-between">
-								<h2 className="text-lg font-bold">{product.name}</h2>
-								<small>{formattedDate}</small>
-							</header>
-							<nav className="flex gap-1 my-2">
-								<Category categoryName={product.category} />
-							</nav>
-							<p className="w-full">{product.description}</p>
-							<footer>
-								{user.id == product.userId ? (
-									<button
-										onClick={async () => {
-											await deleteProduct(product.id);
-										}}
-										className="flex items-center gap-1 text-red-700 hover:text-red-600 cursor-pointer text-lg"
-									>
-										<FaRegTrashAlt /> Deletar
-									</button>
-								) : (
-									<button
-										onClick={async () => {
-											await goToConversation(user.id, product.userId);
-										}}
-										className="flex items-center gap-1 text-green-700 hover:text-green-600 cursor-pointer text-lg"
-									>
-										<BiLike /> Me interessei!
-									</button>
-								)}
-							</footer>
-						</section>
+							product={product}
+							formattedDate={formattedDate}
+							userId={user.id}
+						/>
 					);
 				})}
 			</main>
