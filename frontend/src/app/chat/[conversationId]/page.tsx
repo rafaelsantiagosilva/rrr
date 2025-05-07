@@ -1,6 +1,7 @@
 'use client';
 
-import { Header } from '@/components/header/header';
+import { HeaderLogged } from '@/components/header/header-logged';
+import { API_URL } from '@/http/env';
 import { Message } from '@/interfaces/message';
 import { useParams, useRouter } from 'next/navigation';
 import { FormEvent, useEffect, useState } from 'react';
@@ -21,7 +22,7 @@ export default function MessagePage() {
 
 	async function getMessages() {
 		const response = await fetch(
-			`http://localhost:3333/messages/conversation/${conversationId}`
+			`${API_URL}/messages/conversation/${conversationId}`
 		);
 
 		const data = await response.json();
@@ -38,7 +39,7 @@ export default function MessagePage() {
 			conversationId,
 		});
 
-		const response = await fetch('http://localhost:3333/messages', {
+		const response = await fetch(API_URL + '/messages', {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -59,17 +60,17 @@ export default function MessagePage() {
 	}, []);
 
 	return (
-		<div>
-			<Header />
+		<>
+			<HeaderLogged />
 
-			<main className="p-6 h-[80dvh] flex flex-col justify-between gap-4 items-center ">
-				<div className="w-full p-4 flex flex-col items-center justify-center gap-2 overflow-x-hidden overflow">
+			<main className="bg-sky-50 mx-0 p-6 pt-[65px] flex flex-col justify-between gap-4 items-center">
+				<div className="rounded-sm max-h-4/6 bg-sky-50 w-full sm:w-8/12 p-4 mb-12 flex flex-col items-center justify-center gap-2 overflow-x-hidden snap-end">
 					{messages.map((message) => (
 						<section
-							className={`p-6 relative w-lg my-2 mx-12 rounded-lg ${
+							className={`p-6 relative w-full my-2 mx-12 rounded-lg ${
 								message.userSenderId === user.id
-									? 'relative bg-blue-600 text-zinc-50'
-									: 'relative border border-blue-600 text-blue-600'
+									? 'relative bg-sky-600 text-zinc-50 text-right'
+									: 'relative border border-sky-600 text-sky-600'
 							}`}
 							key={message.id}
 						>
@@ -82,18 +83,18 @@ export default function MessagePage() {
 					onSubmit={async (e) => {
 						await sendMessage(e);
 					}}
-					className="fixed mb-4 bottom-0 w-9/12"
+					className="fixed mb-4 bottom-1/7 sm:bottom-0 w-9/12"
 				>
 					<div className="w-full flex gap-2 items-center">
 						<input
 							type="text"
-							className="bg-slate-100 w-[85%] shadow border border-blue-600 text-lg px-4 py-3 rounded-sm"
+							className="bg-slate-100 w-[85%] shadow border border-sky-600 text-lg px-4 py-3 rounded-sm"
 							required
 							value={messageContent}
 							onChange={(e) => setMessageContent(e.target.value)}
 						/>
 						<button
-							className="p-3 rounded-full shadow border-r-4 border-r-blue-800 cursor-pointer text-3xl text-center text-slate-50 bg-blue-700 hover:bg-blue-600 flex items-center justify-center"
+							className="p-3 rounded-full shadow border-r-4 border-r-sky-800 cursor-pointer text-3xl text-center text-slate-50 bg-sky-700 hover:bg-sky-600 flex items-center justify-center"
 							type="submit"
 						>
 							<IoIosSend />
@@ -101,6 +102,6 @@ export default function MessagePage() {
 					</div>
 				</form>
 			</main>
-		</div>
+		</>
 	);
 }

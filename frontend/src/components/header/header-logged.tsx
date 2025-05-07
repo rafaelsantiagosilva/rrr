@@ -10,7 +10,7 @@ import { LinkLogged } from './link-logged';
 
 export function HeaderLogged() {
 	return (
-		<div>
+		<div className="z-10">
 			<nav className="h-full bg-sky-700 w-[100px] fixed hidden justify-center shadow md:flex">
 				<div className="flex gap-3 flex-col justify-center">
 					<LinkLogged href="/feed" icon={IoHomeOutline} />
