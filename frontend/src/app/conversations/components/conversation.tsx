@@ -33,11 +33,11 @@ export function Conversation({
 		>
 			<header className="flex gap-2 items-center">
 				<img
-					src={`${API_URL}/profile/${otherUser.id}`}
+					src={`${API_URL}/users/profile/${otherUser.id}`}
 					onError={(e) => {
 						e.currentTarget.src = '/default-avatar.png';
 					}}
-					className="size-12"
+					className="size-12 rounded-full"
 				/>
 				<h1 className="text-2xl font-bold">{otherUser.name}</h1>
 			</header>

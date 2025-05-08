@@ -5,14 +5,12 @@ import {
 	createConversationBetweenTwoUsers,
 	getConversationBetweenTwoUsers,
 } from '@/http/conversations';
-import { deleteProduct } from '@/http/products';
 import { getUser } from '@/http/user';
 import { Product } from '@/interfaces/product';
 import { User } from '@/interfaces/user';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
 import { useEffect, useState } from 'react';
 import { BiLike } from 'react-icons/bi';
-import { FaRegTrashAlt } from 'react-icons/fa';
 
 interface PostProps {
 	product: Product;
@@ -81,16 +79,7 @@ export function Post({ product, userId, router }: PostProps) {
 			</nav>
 			<p className="w-full">{product.description}</p>
 			<footer>
-				{userId == product.userId ? (
-					<button
-						onClick={async () => {
-							await deleteProduct(product.id);
-						}}
-						className="flex items-center gap-1 text-red-700 hover:text-red-600 cursor-pointer text-lg"
-					>
-						<FaRegTrashAlt /> Deletar
-					</button>
-				) : (
+				{userId != product.userId && (
 					<button
 						onClick={async () => {
 							await goToConversation(userId, product.userId);
