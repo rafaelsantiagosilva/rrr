@@ -1,9 +1,14 @@
 'use client';
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Header } from '@/components/header/header';
 
-export default function CreatePostPage() {
+import { Button } from '@/components/button';
+import { HeaderLogged } from '@/components/header/header-logged';
+import { Input } from '@/components/input';
+import { API_URL } from '@/http/env';
+
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+
+export default function CreatePost() {
 	const user = localStorage.getItem('user');
 	const router = useRouter();
 
@@ -23,7 +28,7 @@ export default function CreatePostPage() {
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
 
-		await fetch('http://localhost:3333/products', {
+		await fetch(API_URL + '/products', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
 			body: JSON.stringify(form),
@@ -34,30 +39,30 @@ export default function CreatePostPage() {
 
 	return (
 		<>
-			<Header />
-			<form onSubmit={handleSubmit} className="max-w-md mx-auto mt-10 space-y-4">
-				<input
-					className="w-full p-2 border rounded"
-					placeholder="Nome do produto"
-					onChange={(e) => setForm({ ...form, name: e.target.value })}
-				/>
-				<textarea
-					className="w-full p-2 border rounded"
-					placeholder="Descrição"
-					onChange={(e) => setForm({ ...form, description: e.target.value })}
-				/>
-				<input
-					className="w-full p-2 border rounded"
-					placeholder="Categoria"
-					onChange={(e) => setForm({ ...form, category: e.target.value })}
-				/>
-				<button
-					type="submit"
-					className="px-4 py-2 border rounded cursor-pointer bg-green-700 text-slate-50 hover:bg-green-600"
+			<HeaderLogged />
+
+			<main className="mx-0 p-6 pt-[65px] flex justify-center gap-4 items-center w-full">
+				<form
+					onSubmit={handleSubmit}
+					className="pt-4 w-8/12 flex flex-col justify-center items-center gap-4"
 				>
-					Criar produto
-				</button>
-			</form>
+					<h2 className="text-center font-bold text-xl">Criar postagem</h2>
+					<Input
+						placeholder="Nome do produto"
+						onChange={(e) => setForm({ ...form, name: e.target.value })}
+					/>
+					<textarea
+						className="px-4 py-2 border-1 border-b-2 border-r-2 border-sky-600 text-xl rounded focus:outline w-full"
+						placeholder="Descrição"
+						onChange={(e) => setForm({ ...form, description: e.target.value })}
+					/>
+					<Input
+						placeholder="Categoria"
+						onChange={(e) => setForm({ ...form, category: e.target.value })}
+					/>
+					<Button type="submit">Criar produto</Button>
+				</form>
+			</main>
 		</>
 	);
 }
