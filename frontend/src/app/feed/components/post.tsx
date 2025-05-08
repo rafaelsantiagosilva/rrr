@@ -1,3 +1,5 @@
+'use client';
+
 import { Category } from '@/components/category';
 import {
 	createConversationBetweenTwoUsers,
@@ -8,7 +10,7 @@ import { getUser } from '@/http/user';
 import { Product } from '@/interfaces/product';
 import { User } from '@/interfaces/user';
 import { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BiLike } from 'react-icons/bi';
 import { FaRegTrashAlt } from 'react-icons/fa';
 
@@ -45,7 +47,9 @@ export function Post({ product, userId, router }: PostProps) {
 		setOwner(user);
 	}
 
-	loadOwner(product.userId);
+	useEffect(() => {
+		loadOwner(product.userId);
+	}, []);
 
 	const formattedDate = new Intl.DateTimeFormat('pt-BR').format(
 		new Date(product.createdAt)
