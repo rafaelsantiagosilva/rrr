@@ -19,7 +19,7 @@ export async function messageRoutes(app: FastifyInstance) {
           content: z.string(),
           userSenderId: z.string().uuid(),
           conversationId: z.string().uuid(),
-          createdAt: z.string(),
+          createdAt: z.date(),
         }),
       },
     },
@@ -97,10 +97,7 @@ export async function messageRoutes(app: FastifyInstance) {
         id: z.string().uuid(),
       }),
       response: {
-        204: z.object({
-          description: z.literal('Mensagem excluída com sucesso.'),
-          type: z.literal('null'),
-        }),
+        204: z.void(),
       },
     },
   }, async (request, reply) => {
