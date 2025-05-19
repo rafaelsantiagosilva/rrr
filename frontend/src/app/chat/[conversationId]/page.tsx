@@ -63,14 +63,14 @@ export default function MessagePage() {
 		<>
 			<HeaderLogged />
 
-			<main className="bg-sky-50 mx-0 p-6 pt-[65px] flex flex-col justify-between gap-4 items-center">
-				<div className="rounded-sm max-h-4/6 bg-sky-50 w-full sm:w-8/12 p-4 mb-12 flex flex-col items-center justify-center gap-2 overflow-x-hidden snap-end">
+			<main className="bg-green-50 mx-0 p-6 pt-[65px] flex flex-col justify-between gap-4 items-center">
+				<div className="rounded-sm max-h-4/6 bg-green-50 w-full sm:w-8/12 p-4 mb-12 flex flex-col items-center justify-center gap-2 overflow-x-hidden snap-end">
 					{messages.map((message) => (
 						<section
 							className={`p-6 relative w-full my-2 mx-12 rounded-lg ${
 								message.userSenderId === user.id
-									? 'relative bg-sky-600 text-zinc-50 text-right'
-									: 'relative border border-sky-600 text-sky-600'
+									? 'relative bg-green-600 text-zinc-50 text-right'
+									: 'relative border border-green-600 text-green-600'
 							}`}
 							key={message.id}
 						>
@@ -88,13 +88,13 @@ export default function MessagePage() {
 					<div className="w-full flex gap-2 items-center">
 						<input
 							type="text"
-							className="bg-slate-100 w-[85%] shadow border border-sky-600 text-lg px-4 py-3 rounded-sm"
+							className="bg-slate-100 w-[85%] shadow border border-green-600 text-lg px-4 py-3 rounded-sm"
 							required
 							value={messageContent}
 							onChange={(e) => setMessageContent(e.target.value)}
 						/>
 						<button
-							className="p-3 rounded-full shadow border-r-4 border-r-sky-800 cursor-pointer text-3xl text-center text-slate-50 bg-sky-700 hover:bg-sky-600 flex items-center justify-center"
+							className="p-3 rounded-full shadow border-r-4 border-r-green-800 cursor-pointer text-3xl text-center text-slate-50 bg-green-700 hover:bg-green-600 flex items-center justify-center"
 							type="submit"
 						>
 							<IoIosSend />

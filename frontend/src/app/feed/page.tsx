@@ -50,7 +50,7 @@ export default function Feed() {
 			<div className="group">
 				<Link
 					href="/create-post"
-					className="fixed bottom-[120px] right-5 flex items-center gap-2 border border-r-4 border-b-4 border-sky-800 px-4 py-3 font-bold text-slate-50 text-xl cursor-pointer rounded-full shadow bg-sky-700 hover:bg-sky-600 transition-all duration-300 w-16 hover:w-60 overflow-hidden"
+					className="fixed bottom-[120px] right-5 flex items-center gap-2 border border-r-4 border-b-4 border-green-800 px-4 py-3 font-bold text-slate-50 text-xl cursor-pointer rounded-full shadow bg-green-700 hover:bg-green-600 transition-all duration-300 w-16 hover:w-60 overflow-hidden"
 				>
 					<span>
 						<FaPlus className="text-2xl text-center" />

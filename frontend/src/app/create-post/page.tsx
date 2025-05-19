@@ -52,7 +52,7 @@ export default function CreatePost() {
 						onChange={(e) => setForm({ ...form, name: e.target.value })}
 					/>
 					<textarea
-						className="px-4 py-2 border-1 border-b-2 border-r-2 border-sky-600 text-xl rounded focus:outline w-full"
+						className="px-4 py-2 border-1 border-b-2 border-r-2 border-green-600 text-xl rounded focus:outline w-full"
 						placeholder="Descrição"
 						onChange={(e) => setForm({ ...form, description: e.target.value })}
 					/>

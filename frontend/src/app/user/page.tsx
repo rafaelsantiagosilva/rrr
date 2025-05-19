@@ -47,7 +47,7 @@ export default function User() {
 						/>
 						<label
 							htmlFor="file-upload"
-							className="flex text-center justify-center items-center w-14 gap-2 text-zinc-50 bg-sky-700 p-2 hover:bg-sky-600 cursor-pointer shadow rounded"
+							className="flex text-center justify-center items-center w-14 gap-2 text-zinc-50 bg-green-700 p-2 hover:bg-green-600 cursor-pointer shadow rounded"
 						>
 							<LuUpload />
 							<input

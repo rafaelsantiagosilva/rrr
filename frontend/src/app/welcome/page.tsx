@@ -15,18 +15,15 @@ export default function Login() {
 	};
 
 	return (
-		<div className="p-10 flex justify-between h-full w-full">
-			<section className="w-1/2 flex flex-col items-center gap-2">
-				<h1 className="flex gap-1 items-center justify-center font-bold text-3xl text-center  text-sky-600 ">
-					RRR
-					<RiRecycleFill />
-				</h1>
+		<div className="p-10 flex flex-col md:flex-row md:justify-between justify-center items-center h-full w-full">
+			<section className="w-1/2 flex flex-col items-center gap-4">
+				<img src={'/green-logo.png'} className="w-72 mt-6" />
 				<h1 className="text-xl text-center">
 					Bem vindo! Aqui você pode descartar seus <br /> bens com pessoas que os
 					querem!
 				</h1>
 				<Image
-					className="rounded shadow"
+					className="rounded shadow hidden md:block"
 					src={'/landing-page-woman.jpg'}
 					width={325}
 					height={325}
@@ -34,13 +31,13 @@ export default function Login() {
 				/>
 			</section>
 
-			<div className="w-1/2 p-2 mt-4 flex flex-col items-center justify-center">
+			<div className="md:w-1/2 p-2 mt-4 flex flex-col items-center justify-center">
 				{isLoginForm ? <LoginForm /> : <RegisterForm />}
 				<span
 					onClick={() => {
 						setIsLoginForm(!isLoginForm);
 					}}
-					className="mt-2 text-lg text-center text-sky-600 underline  hover:text-sky-700 cursor-pointer"
+					className="mt-2 text-lg text-center text-green-600 underline  hover:text-green-700 cursor-pointer"
 				>
 					{textsLink[isLoginForm ? 1 : 0]}
 				</span>
