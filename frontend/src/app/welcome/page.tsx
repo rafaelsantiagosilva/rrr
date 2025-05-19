@@ -32,7 +32,7 @@ export default function Login() {
 			</section>
 
 			<div className="md:w-1/2 p-2 mt-4 flex flex-col items-center justify-center">
-				{isLoginForm ? <LoginForm /> : <RegisterForm />}
+				{isLoginForm ? <LoginForm /> : <RegisterForm onSubmit={setIsLoginForm} />}
 				<span
 					onClick={() => {
 						setIsLoginForm(!isLoginForm);

@@ -1,14 +1,16 @@
 import { Button } from '@/components/button';
 import { Input } from '@/components/input';
-import { useRouter } from 'next/navigation';
 import { FormEvent, useState } from 'react';
 
-export function RegisterForm() {
+export function RegisterForm({
+	onSubmit,
+}: {
+	onSubmit: (showLoginForm: boolean) => void;
+}) {
 	const [name, setName] = useState('');
 	const [username, setUsername] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const router = useRouter();
 
 	async function handleSubmit(event: FormEvent) {
 		event.preventDefault();
@@ -29,7 +31,7 @@ export function RegisterForm() {
 		});
 
 		if (response.ok) {
-			router.push('/login');
+			onSubmit(true);
 		} else {
 			const res = await response.json();
 			alert('Falha no cadastro! Tente novamente!');
