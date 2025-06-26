@@ -35,7 +35,15 @@ export async function userRoutes(app: FastifyInstance) {
     return user;
   })
 
-  app.get('/profile/:id', {}, async (request, reply) => {
+  app.get('/profile/:id', {
+    schema: {
+      tag: ['users', 'upload'],
+      summary: "Buscar foto do usuário",
+      params: z.object({
+        id: z.string().uuid()
+      })
+    }
+  }, async (request, reply) => {
     const paramsSchema = z.object({ id: z.string().uuid() })
     const { id } = paramsSchema.parse(request.params)
 
@@ -130,7 +138,12 @@ export async function userRoutes(app: FastifyInstance) {
     }
   })
 
-  app.post('/upload/profile/:id', {}, async (request, reply) => {
+  app.post('/upload/profile/:id', {
+    schema: {
+      tags: ['users', 'upload'],
+      summary: 'Faz upload da imagem do usuário'
+    }
+  }, async (request, reply) => {
     const paramsSchema = z.object({
       id: z.string().uuid()
     })
